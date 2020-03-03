@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import api from '../../services/api';
-
-// import { Container } from './styles';
+import Conteiner from '../../components/Conteiner';
+import { Loading, Owner } from './styles';
 
 export default class Repository extends Component {
+  // eslint-disable-next-line react/static-property-placement
+  static propTypes = {
+    match: PropTypes.shape({
+      params: PropTypes.shape({
+        repo: PropTypes.string,
+      }),
+    }).isRequired,
+  };
+
   // eslint-disable-next-line react/state-in-constructor
   state = {
     repo: {},
@@ -36,6 +47,19 @@ export default class Repository extends Component {
   render() {
     const { repo, issues, loading } = this.state;
 
-    return <h1>Repository</h1>;
+    if (loading) {
+      return <Loading>Carregando...</Loading>;
+    }
+
+    return (
+      <Conteiner>
+        <Owner>
+          <Link to="/">Voltar aos repositórios</Link>
+          <img src={repo.owner.avatar_url} alt={repo.owner.login} />
+          <h1>{repo.name}</h1>
+          <p>{repo.description}</p>
+        </Owner>
+      </Conteiner>
+    );
   }
 }
